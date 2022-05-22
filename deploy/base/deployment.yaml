@@ -11,6 +11,9 @@ spec:
   filterTags:
     pattern: "^sha256-(?P<version.*)"
     extract: "$version"
+  policy:
+    numerical:
+      order: asc
 ---
 apiVersion: apps/v1
 kind: Deployment
