@@ -1,0 +1,56 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: hello-http
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: hello-http
+    namespace: flux-system
+  filterTags:
+    pattern: "^sha256-(?P<version.*)"
+    extract: "$version"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-http
+  namespace: default
+  labels:
+    app: hello-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-http
+  template:
+    metadata:
+      labels:
+        app: hello-http
+      annotations:
+        repository: "https://github.com/vlj91/hello-http"
+    spec:
+      containers:
+        - image: ghcr.io/vlj91/hello-http/hello-http:master # {"$imagepolicy": "default:hello-http"}
+          name: hello-http
+          ports:
+            - containerPort: 8080
+              name: http
+          resources:
+            limits:
+              cpu: 512m
+              memory: 512Mi
+            requests:
+              cpu: 128m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              scheme: HTTP
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 3
+            failureThreshold: 3
