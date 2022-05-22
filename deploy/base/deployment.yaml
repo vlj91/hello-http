@@ -41,7 +41,7 @@ spec:
         repository: "https://github.com/vlj91/hello-http"
     spec:
       containers:
-        - image: ghcr.io/vlj91/hello-http/hello-http:master # {"$imagepolicy": "default:hello-http"}
+        - image: ghcr.io/vlj91/hello-http:master # {"$imagepolicy": "default:hello-http"}
           name: hello-http
           ports:
             - containerPort: 8080
