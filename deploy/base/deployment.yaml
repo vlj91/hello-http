@@ -63,3 +63,24 @@ spec:
             timeoutSeconds: 5
             successThreshold: 3
             failureThreshold: 3
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: hello-http
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: hello-http
+    namespace: default
+  git:
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+    messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
+  update:
+    path: ./deploy/base
+    strategy: Setters
