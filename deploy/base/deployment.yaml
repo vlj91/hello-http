@@ -17,12 +17,9 @@ spec:
   imageRepositoryRef:
     name: hello-http
     namespace: flux-system
-  filterTags:
-    pattern: "^sha256-(?P<version.*)"
-    extract: "$version"
   policy:
-    numerical:
-      order: asc
+    semver:
+      range: '>=0.0.1'
 ---
 apiVersion: apps/v1
 kind: Deployment
