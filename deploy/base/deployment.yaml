@@ -1,5 +1,14 @@
 ---
 apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: hello-http
+  namespace: flux-system
+spec:
+  interval: 1m
+  image: ghcr.io/vlj91/hello-http
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
 kind: ImagePolicy
 metadata:
   name: hello-http
