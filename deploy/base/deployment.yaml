@@ -80,7 +80,6 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-    messageTemplate: "{{range .Updated.Images}}{{println .}}{{end}}"
   update:
     path: ./deploy/base
     strategy: Setters
