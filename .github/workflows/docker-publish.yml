@@ -53,7 +53,7 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: |
-            name=ghcr.io/vlj91/hello-http
+            ghcr.io/vlj91/hello-http
           tags: |
             type=ref,event=branch
             type=ref,event=pr
