@@ -1,98 +1,98 @@
----
-apiVersion: image.toolkit.fluxcd.io/v1beta1
-kind: ImageRepository
-metadata:
-  name: hello-http
-  namespace: flux-system
-spec:
-  interval: 1m
-  image: ghcr.io/vlj91/hello-http
----
-apiVersion: image.toolkit.fluxcd.io/v1beta1
-kind: ImagePolicy
-metadata:
-  name: hello-http
-  namespace: flux-system
-spec:
-  imageRepositoryRef:
-    name: hello-http
-    namespace: flux-system
-  policy:
-    semver:
-      range: '>=0.0.1'
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: hello-http
-  namespace: default
-  labels:
-    app: hello-http
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: hello-http
-  template:
-    metadata:
-      labels:
-        app: hello-http
-      annotations:
-        repository: "https://github.com/vlj91/hello-http"
-    spec:
-      containers:
-        - image: ghcr.io/vlj91/hello-http:master # {"$imagepolicy": "flux-system:hello-http:tag"}
-          name: hello-http
-          ports:
-            - containerPort: 8080
-              name: http
-          resources:
-            limits:
-              cpu: 512m
-              memory: 512Mi
-            requests:
-              cpu: 128m
-              memory: 128Mi
-          readinessProbe:
-            httpGet:
-              path: /health
-              scheme: HTTP
-              port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 3
-            failureThreshold: 3
----
-apiVersion: image.toolkit.fluxcd.io/v1beta1
-kind: ImageUpdateAutomation
-metadata:
-  name: hello-http
-  namespace: flux-system
-spec:
-  interval: 1m
-  sourceRef:
-    kind: GitRepository
-    name: hello-http
-    namespace: default
-  git:
-    commit:
-      author:
-        email: fluxcdbot@users.noreply.github.com
-        name: fluxcdbot
-  update:
-    path: ./deploy/base
-    strategy: Setters
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-http
-  namespace: default
-spec:
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-  selector:
-    app: hello-http
+#---
+#apiVersion: image.toolkit.fluxcd.io/v1beta1
+#kind: ImageRepository
+#metadata:
+#  name: hello-http
+#  namespace: flux-system
+#spec:
+#  interval: 1m
+#  image: ghcr.io/vlj91/hello-http
+#---
+#apiVersion: image.toolkit.fluxcd.io/v1beta1
+#kind: ImagePolicy
+#metadata:
+#  name: hello-http
+#  namespace: flux-system
+#spec:
+#  imageRepositoryRef:
+#    name: hello-http
+#    namespace: flux-system
+#  policy:
+#    semver:
+#      range: '>=0.0.1'
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: hello-http
+#  namespace: default
+#  labels:
+#    app: hello-http
+#spec:
+#  replicas: 3
+#  selector:
+#    matchLabels:
+#      app: hello-http
+#  template:
+#    metadata:
+#      labels:
+#        app: hello-http
+#      annotations:
+#        repository: "https://github.com/vlj91/hello-http"
+#    spec:
+#      containers:
+#        - image: ghcr.io/vlj91/hello-http:master # {"$imagepolicy": "flux-system:hello-http:tag"}
+#          name: hello-http
+#          ports:
+#            - containerPort: 8080
+#              name: http
+#          resources:
+#            limits:
+#              cpu: 512m
+#              memory: 512Mi
+#            requests:
+#              cpu: 128m
+#              memory: 128Mi
+#          readinessProbe:
+#            httpGet:
+#              path: /health
+#              scheme: HTTP
+#              port: 8080
+#            initialDelaySeconds: 3
+#            periodSeconds: 10
+#            timeoutSeconds: 5
+#            successThreshold: 3
+#            failureThreshold: 3
+#---
+#apiVersion: image.toolkit.fluxcd.io/v1beta1
+#kind: ImageUpdateAutomation
+#metadata:
+#  name: hello-http
+#  namespace: flux-system
+#spec:
+#  interval: 1m
+#  sourceRef:
+#    kind: GitRepository
+#    name: hello-http
+#    namespace: default
+#  git:
+#    commit:
+#      author:
+#        email: fluxcdbot@users.noreply.github.com
+#        name: fluxcdbot
+#  update:
+#    path: ./deploy/base
+#    strategy: Setters
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: hello-http
+#  namespace: default
+#spec:
+#  ports:
+#    - name: http
+#      port: 80
+#      protocol: TCP
+#  selector:
+#    app: hello-http
