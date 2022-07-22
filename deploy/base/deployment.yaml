@@ -83,3 +83,15 @@ spec:
   update:
     path: ./deploy/base
     strategy: Setters
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-http
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+  selector:
+    app: hello-http
